@@ -1,0 +1,11 @@
+package es.safareyes.schoolevents.repositorios;
+
+import es.safareyes.schoolevents.modelos.Continente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface iContinenteRepositorio extends JpaRepository<Continente, Integer> {
+
+
+}
