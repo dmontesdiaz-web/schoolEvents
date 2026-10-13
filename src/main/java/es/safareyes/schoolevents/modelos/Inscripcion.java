@@ -35,6 +35,7 @@ public class Inscripcion {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    @Column(name = "estado", nullable = false, length = 20)
-    private String estado;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "estado", nullable = false)
+    private EstadoInscripcion estado;
 }
