@@ -1,4 +1,4 @@
-package es.safareyes.schoolevents.modelos;
+package es.safareyes.schoolevents.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

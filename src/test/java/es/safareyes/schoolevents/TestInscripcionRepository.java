@@ -1,8 +1,8 @@
 package es.safareyes.schoolevents;
 
-import es.safareyes.schoolevents.dtos.InformeParticipacion;
-import es.safareyes.schoolevents.modelos.Inscripcion;
-import es.safareyes.schoolevents.repositorios.iInscripcionRepository;
+import es.safareyes.schoolevents.dto.response.ParticipacionDto;
+import es.safareyes.schoolevents.entity.Inscripcion;
+import es.safareyes.schoolevents.repository.iInscripcionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -27,6 +27,6 @@ public class TestInscripcionRepository {
 
     @Test
     void consultarInformeParticipacion() {
-        List<InformeParticipacion> todos = repository.informeParticipacion(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
+        List<ParticipacionDto> todos = repository.informeParticipacion(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
     }
 }

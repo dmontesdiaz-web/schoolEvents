@@ -1,6 +1,6 @@
-package es.safareyes.schoolevents.repositorios;
+package es.safareyes.schoolevents.repository;
 
-import es.safareyes.schoolevents.modelos.Usuario;
+import es.safareyes.schoolevents.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

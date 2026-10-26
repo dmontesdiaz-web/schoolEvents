@@ -1,4 +1,4 @@
-package es.safareyes.schoolevents.modelos;
+package es.safareyes.schoolevents.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -60,4 +60,8 @@ public class Evento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
+
+    @Column(name = "estado", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private EstadoEvento estado;
 }

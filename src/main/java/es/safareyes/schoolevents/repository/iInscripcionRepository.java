@@ -1,7 +1,7 @@
-package es.safareyes.schoolevents.repositorios;
+package es.safareyes.schoolevents.repository;
 
-import es.safareyes.schoolevents.dtos.InformeParticipacion;
-import es.safareyes.schoolevents.modelos.Inscripcion;
+import es.safareyes.schoolevents.dto.response.ParticipacionDto;
+import es.safareyes.schoolevents.entity.Inscripcion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,8 +14,8 @@ import java.util.*;
 public interface iInscripcionRepository extends JpaRepository<Inscripcion, Integer> {
     Page<Inscripcion> findByEventoId(Integer eventoId, Pageable pageable);
 
-    @Query("SELECT new es.safareyes.schoolevents.dtos.InformeParticipacion(e.categoria.nombre, u.curso.nombre, COUNT(i)) " +
+    @Query("SELECT new es.safareyes.schoolevents.dto.response.ParticipacionDto(e.categoria.nombre, u.curso.nombre, COUNT(i)) " +
             "FROM Inscripcion i JOIN i.evento e JOIN i.usuario u " +
             "WHERE e.fechaInicio BETWEEN :desde AND :hasta GROUP BY e.categoria.nombre, u.curso.nombre")
-    List<InformeParticipacion> informeParticipacion(LocalDate desde, LocalDate hasta);
+    List<ParticipacionDto> informeParticipacion(LocalDate desde, LocalDate hasta);
 }

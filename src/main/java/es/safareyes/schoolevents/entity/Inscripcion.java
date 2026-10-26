@@ -1,4 +1,4 @@
-package es.safareyes.schoolevents.modelos;
+package es.safareyes.schoolevents.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "inscripcion", uniqueConstraints = {
@@ -32,10 +32,33 @@ public class Inscripcion {
     @JoinColumn(name = "id_evento", nullable = false)
     private Evento evento;
 
-    @Column(name = "fecha", nullable = false)
-    private LocalDate fecha;
-
+    @Column(name = "tipo", nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "estado", nullable = false)
+    private TipoInscripcion tipo;
+
+    // null si el tipo es ME_INTERESA
+    @Column(name = "estado")
+    @Enumerated(EnumType.ORDINAL)
     private EstadoInscripcion estado;
+
+    // null mientras no se pase lista
+    @Column(name = "asistio")
+    private Boolean asistio;
+
+    @Column(name = "creado_en", nullable = false)
+    private LocalDateTime creadoEn;
+
+    @Column(name = "actualizado_en", nullable = false)
+    private LocalDateTime actualizadoEn;
+
+    @PrePersist
+    void alCrear() {
+        creadoEn = LocalDateTime.now();
+        actualizadoEn = creadoEn;
+    }
+
+    @PreUpdate
+    void alActualizar() {
+        actualizadoEn = LocalDateTime.now();
+    }
 }

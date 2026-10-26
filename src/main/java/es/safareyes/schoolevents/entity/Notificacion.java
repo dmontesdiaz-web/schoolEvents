@@ -1,4 +1,4 @@
-package es.safareyes.schoolevents.modelos;
+package es.safareyes.schoolevents.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,13 +8,13 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "publicacion")
+@Table(name = "notificacion")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Publicacion {
+public class Notificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +22,4 @@ public class Publicacion {
 
     @Column(name = "codigo", nullable = false, length = 20)
     private String codigo;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
 }

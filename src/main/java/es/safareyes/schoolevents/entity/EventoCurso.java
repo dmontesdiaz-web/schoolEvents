@@ -1,5 +1,4 @@
-
-package es.safareyes.schoolevents.modelos;
+package es.safareyes.schoolevents.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,26 +8,25 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "usuario_notificacion", uniqueConstraints = {
-        @UniqueConstraint(name = "ux_usuario_notificacion", columnNames = {"id_usuario", "id_notificacion"})
+@Table(name = "evento_curso", uniqueConstraints = {
+        @UniqueConstraint(name = "ux_evento_curso", columnNames = {"id_evento", "id_curso"})
 })
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioNotificacion {
+public class EventoCurso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "id_evento", nullable = false)
+    private Evento evento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_notificacion", nullable = false)
-    private Notificacion notificacion;
+    @JoinColumn(name = "id_curso", nullable = false)
+    private Curso curso;
 }
- 

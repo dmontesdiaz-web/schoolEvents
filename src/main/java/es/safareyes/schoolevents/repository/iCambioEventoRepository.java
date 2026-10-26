@@ -1,6 +1,6 @@
-package es.safareyes.schoolevents.repositorios;
+package es.safareyes.schoolevents.repository;
 
-import es.safareyes.schoolevents.modelos.CambioEvento;
+import es.safareyes.schoolevents.entity.CambioEvento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

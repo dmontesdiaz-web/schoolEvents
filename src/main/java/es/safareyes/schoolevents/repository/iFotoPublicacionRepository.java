@@ -1,6 +1,6 @@
-package es.safareyes.schoolevents.repositorios;
+package es.safareyes.schoolevents.repository;
 
-import es.safareyes.schoolevents.modelos.FotoPublicacion;
+import es.safareyes.schoolevents.entity.FotoPublicacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

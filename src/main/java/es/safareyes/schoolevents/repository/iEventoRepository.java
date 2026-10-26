@@ -1,7 +1,7 @@
-package es.safareyes.schoolevents.repositorios;
+package es.safareyes.schoolevents.repository;
 
-import es.safareyes.schoolevents.modelos.EstadoInscripcion;
-import es.safareyes.schoolevents.modelos.Evento;
+import es.safareyes.schoolevents.entity.Evento;
+import es.safareyes.schoolevents.entity.TipoInscripcion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +20,6 @@ public interface iEventoRepository extends JpaRepository<Evento, Integer> {
     @Query("SELECT e FROM Evento e JOIN FETCH e.lugar JOIN FETCH e.categoria WHERE e.id = :id")
     Optional<Evento> findDetalleById(Integer id);
 
-    @Query("SELECT i.evento FROM Inscripcion i WHERE i.usuario.id = :usuarioId AND i.estado = :tipo")
-    List<Evento> findAgendaUsuario(Integer usuarioId, EstadoInscripcion tipo);
+    @Query("SELECT i.evento FROM Inscripcion i WHERE i.usuario.id = :usuarioId AND i.tipo = :tipo")
+    List<Evento> findAgendaUsuario(Integer usuarioId, TipoInscripcion tipo);
 }

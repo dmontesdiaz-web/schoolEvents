@@ -1,7 +1,7 @@
 package es.safareyes.schoolevents;
 
-import es.safareyes.schoolevents.modelos.Categoria;
-import es.safareyes.schoolevents.repositorios.iCategoriaRepository;
+import es.safareyes.schoolevents.entity.Categoria;
+import es.safareyes.schoolevents.repository.iCategoriaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
