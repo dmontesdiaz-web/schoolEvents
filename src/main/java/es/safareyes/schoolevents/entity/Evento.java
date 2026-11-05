@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -23,7 +24,7 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "codigo", nullable = false, length = 20)
+    @Column(name = "codigo", nullable = false, length = 20, unique = true)
     private String codigo;
 
     @Column(name = "titulo", nullable = false, length = 150)
@@ -61,7 +62,29 @@ public class Evento {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    @Column(name = "estado", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "estado", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     private EstadoEvento estado;
+
+    // solo el organizador (o un ADMIN) puede editarlo, publicarlo, cancelarlo y pasar lista
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_organizador", nullable = false)
+    private Usuario organizador;
+
+    @Column(name = "creado_en", nullable = false)
+    private LocalDateTime creadoEn;
+
+    @Column(name = "actualizado_en", nullable = false)
+    private LocalDateTime actualizadoEn;
+
+    @PrePersist
+    void alCrear() {
+        creadoEn = LocalDateTime.now();
+        actualizadoEn = creadoEn;
+    }
+
+    @PreUpdate
+    void alActualizar() {
+        actualizadoEn = LocalDateTime.now();
+    }
 }

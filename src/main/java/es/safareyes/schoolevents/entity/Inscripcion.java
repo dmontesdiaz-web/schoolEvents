@@ -32,18 +32,25 @@ public class Inscripcion {
     @JoinColumn(name = "id_evento", nullable = false)
     private Evento evento;
 
-    @Column(name = "tipo", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "tipo", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     private TipoInscripcion tipo;
 
-    // null si el tipo es ME_INTERESA
-    @Column(name = "estado")
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "estado", length = 20)
+    @Enumerated(EnumType.STRING)
     private EstadoInscripcion estado;
 
-    // null mientras no se pase lista
     @Column(name = "asistio")
     private Boolean asistio;
+
+    @Column(name = "posicion_espera")
+    private Integer posicionEspera;
+
+    @Column(name = "recordatorio_24h_enviado", nullable = false)
+    private boolean recordatorio24hEnviado;
+
+    @Column(name = "recordatorio_1h_enviado", nullable = false)
+    private boolean recordatorio1hEnviado;
 
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn;

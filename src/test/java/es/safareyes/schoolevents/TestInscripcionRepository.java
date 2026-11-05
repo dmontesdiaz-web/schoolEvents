@@ -1,6 +1,6 @@
 package es.safareyes.schoolevents;
 
-import es.safareyes.schoolevents.dto.response.ParticipacionDto;
+import es.safareyes.schoolevents.dtos.ParticipacionDTO;
 import es.safareyes.schoolevents.entity.Inscripcion;
 import es.safareyes.schoolevents.repository.iInscripcionRepository;
 import org.junit.jupiter.api.Test;
@@ -27,6 +27,6 @@ public class TestInscripcionRepository {
 
     @Test
     void consultarInformeParticipacion() {
-        List<ParticipacionDto> todos = repository.informeParticipacion(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
+        List<ParticipacionDTO> todos = repository.informeParticipacion(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
     }
 }

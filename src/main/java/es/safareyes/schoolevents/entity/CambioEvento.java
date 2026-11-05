@@ -22,13 +22,28 @@ public class CambioEvento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "descripcion_cambio", nullable = false, columnDefinition = "text")
-    private String descripcionCambio;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_evento", nullable = false)
+    private Evento evento;
+
+    @Column(name = "campo", nullable = false, length = 30)
+    private String campo;
+
+    @Column(name = "valor_anterior", nullable = false, length = 150)
+    private String valorAnterior;
+
+    @Column(name = "valor_nuevo", nullable = false, length = 150)
+    private String valorNuevo;
 
     @Column(name = "fecha_cambio", nullable = false)
     private LocalDateTime fechaCambio;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_evento", nullable = false)
-    private Evento evento;
+    @JoinColumn(name = "id_autor", nullable = false)
+    private Usuario autor;
+
+    @PrePersist
+    void alCrear() {
+        fechaCambio = LocalDateTime.now();
+    }
 }
