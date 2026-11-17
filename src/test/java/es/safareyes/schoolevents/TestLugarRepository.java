@@ -1,7 +1,7 @@
 package es.safareyes.schoolevents;
 
-import es.safareyes.schoolevents.entity.Lugar;
-import es.safareyes.schoolevents.repository.iLugarRepository;
+import es.safareyes.schoolevents.entities.Lugar;
+import es.safareyes.schoolevents.repositories.iLugarRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;

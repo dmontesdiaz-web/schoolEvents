@@ -1,8 +1,8 @@
 package es.safareyes.schoolevents;
 
-import es.safareyes.schoolevents.entity.Evento;
-import es.safareyes.schoolevents.entity.TipoInscripcion;
-import es.safareyes.schoolevents.repository.iEventoRepository;
+import es.safareyes.schoolevents.entities.Evento;
+import es.safareyes.schoolevents.entities.TipoInscripcion;
+import es.safareyes.schoolevents.repositories.iEventoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
