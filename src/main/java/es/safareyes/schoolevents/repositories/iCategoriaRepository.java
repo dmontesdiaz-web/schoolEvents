@@ -8,11 +8,5 @@ import java.util.*;
 @Repository
 public interface iCategoriaRepository extends JpaRepository<Categoria, Integer> {
 
-
-    /**
-     * Usando JPA Interfaz (endpoint 7)
-     *
-     * @return
-     */
     List<Categoria> findAllByOrderByNombreAsc();
 }
