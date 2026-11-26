@@ -11,10 +11,10 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {EventoMapper.class})
 public interface InscripcionMapper {
 
-    @Mapping(target = "evento.id", source = "idEvento")
-    @Mapping(target = "evento.titulo", source = "evento")
-    @Mapping(target = "usuario.id", source = "idUsuario")
-    @Mapping(target = "usuario.nombre", source = "usuario")
+    @Mapping(source = "evento.id", target = "idEvento")
+    @Mapping(source = "evento.titulo", target = "evento")
+    @Mapping(source = "usuario.id", target = "idUsuario")
+    @Mapping(source = "usuario.nombre", target = "usuario")
     InscripcionDTO toDTO(Inscripcion inscripcion);
 
     List<InscripcionDTO> toDTO(List<Inscripcion> inscripcions);

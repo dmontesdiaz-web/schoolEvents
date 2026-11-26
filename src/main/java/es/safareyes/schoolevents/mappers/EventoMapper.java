@@ -15,10 +15,10 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventoMapper {
 
-    @Mapping(target = "lugar.nombre", source = "lugar")
-    @Mapping(target = "categoria.nombre", source = "categoria")
-    @Mapping(target = "categoria.icono", source = "icono")
-    @Mapping(target = "categoria.color", source = "color")
+    @Mapping(source = "lugar.nombre", target = "lugar")
+    @Mapping(source = "categoria.nombre", target = "categoria")
+    @Mapping(source = "categoria.icono", target = "icono")
+    @Mapping(source = "categoria.color", target = "color")
     EventoResumenDTO toResumenDTO(Evento evento);
 
     List<EventoResumenDTO> toResumenDTO(List<Evento> eventos);
@@ -29,7 +29,7 @@ public interface EventoMapper {
     @Mapping(source = "categoria.color", target = "color")
     EventoCalendarioDTO toCalendarioDTO(Evento evento);
 
-    @Mapping(source = "evento.organizadornombre", target = "organizador")
+    @Mapping(source = "evento.organizador.nombre", target = "organizador")
     EventoDetalleDTO toDetalleDTO(Evento evento, Integer plazasLibres);
 
     @Mapping(source = "curso.id", target = "id")

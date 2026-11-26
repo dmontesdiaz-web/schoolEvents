@@ -10,8 +10,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {FotoMapper.class})
 public interface PublicacionMapper {
 
-    @Mapping(target = "usuario.id", source = "idAutor")
-    @Mapping(target = "usuario.nombre", source = "autor")
+    @Mapping(source = "usuario.id", target = "idAutor")
+    @Mapping(source = "usuario.nombre", target = "autor")
     PublicacionDTO toDTO(Publicacion publicacion);
 
     List<PublicacionDTO> toDTO(List<Publicacion> publicaciones);

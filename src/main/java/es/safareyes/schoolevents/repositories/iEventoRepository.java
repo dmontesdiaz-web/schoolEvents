@@ -57,8 +57,8 @@ public interface iEventoRepository extends JpaRepository<Evento, Integer>, JpaSp
                 JOIN FETCH e.lugar
                 JOIN FETCH e.categoria
             WHERE e.fechaInicio BETWEEN :inicio AND :fin
-              AND e.estado IN (es.safareyes.schoolevents.modelos.EstadoEvento.PUBLICADO,
-                               es.safareyes.schoolevents.modelos.EstadoEvento.FINALIZADO)
+              AND e.estado IN (es.safareyes.schoolevents.entities.EstadoEvento.PUBLICADO,
+                               es.safareyes.schoolevents.entities.EstadoEvento.FINALIZADO)
             ORDER BY e.fechaInicio, e.horaInicio
             """)
     List<Evento> buscarCalendario(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
