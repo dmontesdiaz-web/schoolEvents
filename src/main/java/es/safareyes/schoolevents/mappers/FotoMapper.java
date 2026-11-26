@@ -5,8 +5,11 @@ import es.safareyes.schoolevents.entities.FotoPublicacion;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface FotoMapper {
-    @Mapping(target = "url", expression = "java(\"/api/v1/fotos/\" + foto.getId())")
-    FotoDTO toDto(FotoPublicacion foto);
+
+    FotoDTO toDTO(FotoPublicacion foto);
+    List<FotoDTO> toDTO(List<FotoPublicacion> fotos);
 }

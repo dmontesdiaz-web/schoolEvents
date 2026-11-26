@@ -11,5 +11,4 @@ public record PublicacionDTO(
         String autor,
         LocalDateTime creadaEn,
         List<FotoDTO> fotos
-) {
-}
+) { }

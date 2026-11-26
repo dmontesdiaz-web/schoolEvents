@@ -2,7 +2,6 @@ package es.safareyes.schoolevents.repositories;
 
 import es.safareyes.schoolevents.entities.EstadoEvento;
 import es.safareyes.schoolevents.entities.Evento;
-import es.safareyes.schoolevents.dtos.EventoCalendarioView;
 import es.safareyes.schoolevents.entities.EventoCurso;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Subquery;
@@ -26,31 +25,45 @@ import java.util.Optional;
 
 @Repository
 public interface iEventoRepository extends JpaRepository<Evento, Integer>, JpaSpecificationExecutor<Evento> {
+    List<Evento> findByTituloContainingIgnoreCase(String titulo);
 
-    Page<Evento> findByTituloContainingIgnoreCase(String titulo, Pageable pageable);
+    @Query("""
+            SELECT e FROM Evento e
+                JOIN FETCH e.lugar
+                JOIN FETCH e.categoria
+            WHERE e.estado IN (es.safareyes.schoolevents.entities.EstadoEvento.PUBLICADO,
+                               es.safareyes.schoolevents.entities.EstadoEvento.FINALIZADO)
+              AND (:idCategoria IS NULL OR e.categoria.id = :idCategoria)
+              AND (:texto IS NULL OR LOWER(e.titulo) LIKE :texto OR LOWER(e.descripcion) LIKE :texto)
+              AND (:desde IS NULL OR e.fechaInicio >= :desde)
+              AND (:hasta IS NULL OR e.fechaInicio <= :hasta)
+              AND (:idCurso IS NULL
+                   OR EXISTS (SELECT ec FROM EventoCurso ec WHERE ec.evento = e AND ec.curso.id = :idCurso)
+                   OR NOT EXISTS (SELECT ec2 FROM EventoCurso ec2 WHERE ec2.evento = e))
+            ORDER BY e.fechaInicio, e.horaInicio
+            """)
+    List<Evento> buscarConFiltros(@Param("idCategoria") Integer idCategoria,
+                                  @Param("idCurso") Integer idCurso,
+                                  @Param("texto") String texto,
+                                  @Param("desde") LocalDate desde,
+                                  @Param("hasta") LocalDate hasta);
 
-    @Override
-    @EntityGraph(attributePaths = {"lugar", "categoria"})
-    Page<Evento> findAll(Specification<Evento> spec, Pageable pageable);
 
     @EntityGraph(attributePaths = {"lugar", "categoria", "organizador", "cursos", "cursos.curso"})
     Optional<Evento> findDetalleById(Integer id);
 
-    @Query(value = """
-            SELECT e.id AS id, e.titulo AS titulo, e.fecha_inicio AS dia,
-                   e.hora_inicio AS horaInicio, e.hora_fin AS horaFin,
-                   l.nombre AS lugar, c.nombre AS categoria, c.icono AS icono, c.color AS color
-            FROM evento e
-                JOIN lugar l ON l.id = e.id_lugar
-                JOIN categoria c ON c.id = e.id_categoria
-            WHERE EXTRACT(MONTH FROM e.fecha_inicio) = :mes
-              AND EXTRACT(YEAR FROM e.fecha_inicio) = :anio
-              AND e.estado IN ('PUBLICADO', 'FINALIZADO')
-            ORDER BY e.fecha_inicio, e.hora_inicio
-            """, nativeQuery = true)
-    List<EventoCalendarioView> findCalendario(@Param("mes") Integer mes, @Param("anio") Integer anio);
+    @Query("""
+            SELECT e FROM Evento e
+                JOIN FETCH e.lugar
+                JOIN FETCH e.categoria
+            WHERE e.fechaInicio BETWEEN :inicio AND :fin
+              AND e.estado IN (es.safareyes.schoolevents.modelos.EstadoEvento.PUBLICADO,
+                               es.safareyes.schoolevents.modelos.EstadoEvento.FINALIZADO)
+            ORDER BY e.fechaInicio, e.horaInicio
+            """)
+    List<Evento> buscarCalendario(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
 
-    @Query(value = """
+    @Query(nativeQuery = true, value = """
             SELECT EXISTS (
                 SELECT 1 FROM evento e
                 WHERE e.id_lugar = :idLugar
@@ -58,57 +71,17 @@ public interface iEventoRepository extends JpaRepository<Evento, Integer>, JpaSp
                   AND e.id <> :idExcluido
                   AND (e.fecha_inicio + e.hora_inicio) < :fin
                   AND (e.fecha_fin + e.hora_fin) > :inicio)
-            """, nativeQuery = true)
-    boolean existeSolape(@Param("idLugar") Integer idLugar, @Param("inicio") LocalDateTime inicio,
-                         @Param("fin") LocalDateTime fin, @Param("idExcluido") Integer idExcluido);
+            """)
+    boolean existeSolape(@Param("idLugar") Integer idLugar,
+                         @Param("inicio") LocalDateTime inicio,
+                         @Param("fin") LocalDateTime fin,
+                         @Param("idExcluido") Integer idExcluido);
 
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
-            UPDATE Evento e SET e.estado = es.safareyes.schoolevents.entities.EstadoEvento.FINALIZADO
+            SELECT e FROM Evento e
             WHERE e.estado = es.safareyes.schoolevents.entities.EstadoEvento.PUBLICADO
               AND (e.fechaFin < :hoy OR (e.fechaFin = :hoy AND e.horaFin <= :ahora))
             """)
-    int finalizarTerminados(@Param("hoy") LocalDate hoy, @Param("ahora") LocalTime ahora);
-
-    static Specification<Evento> filtrar(Integer idCategoria, Integer idCurso, String texto,
-                                         LocalDate desde, LocalDate hasta) {
-        return (root, query, cb) -> {
-            List<Predicate> condiciones = new ArrayList<>();
-
-            // RN-02: el público solo ve eventos publicados y finalizados
-            condiciones.add(root.get("estado").in(EstadoEvento.PUBLICADO, EstadoEvento.FINALIZADO));
-
-            if (idCategoria != null) {
-                condiciones.add(cb.equal(root.get("categoria").get("id"), idCategoria));
-            }
-            if (texto != null && !texto.isBlank()) {
-                String patron = "%" + texto.trim().toLowerCase() + "%";
-                condiciones.add(cb.or(
-                        cb.like(cb.lower(root.get("titulo")), patron),
-                        cb.like(cb.lower(root.get("descripcion")), patron)));
-            }
-            if (desde != null) {
-                condiciones.add(cb.greaterThanOrEqualTo(root.get("fechaInicio"), desde));
-            }
-            if (hasta != null) {
-                condiciones.add(cb.lessThanOrEqualTo(root.get("fechaInicio"), hasta));
-            }
-            // Eventos visibles para un curso: los de ese curso y los abiertos a todos (RN-03)
-            if (idCurso != null) {
-                Subquery<Integer> delCurso = query.subquery(Integer.class);
-                var ec = delCurso.from(EventoCurso.class);
-                delCurso.select(ec.get("id")).where(
-                        cb.equal(ec.get("evento"), root),
-                        cb.equal(ec.get("curso").get("id"), idCurso));
-
-                Subquery<Integer> conCursos = query.subquery(Integer.class);
-                var cualquiera = conCursos.from(EventoCurso.class);
-                conCursos.select(cualquiera.get("id")).where(cb.equal(cualquiera.get("evento"), root));
-
-                condiciones.add(cb.or(cb.exists(delCurso), cb.not(cb.exists(conCursos))));
-            }
-            return cb.and(condiciones.toArray(Predicate[]::new));
-        };
-    }
+    List<Evento> buscarTerminados(@Param("hoy") LocalDate hoy, @Param("ahora") LocalTime ahora);
 
 }

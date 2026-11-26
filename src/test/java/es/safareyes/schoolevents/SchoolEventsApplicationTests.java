@@ -1,16 +1,13 @@
 package es.safareyes.schoolevents;
 
+import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
+import org.springframework.boot.test.context.SpringBootTest;
 
-// Ejecuta todos los tests de repositorios de una vez
-@Suite
-@SelectClasses({
-        TestEventoRepository.class,
-        TestInscripcionRepository.class,
-        TestCategoriaRepository.class,
-        TestLugarRepository.class,
-        TestFotoPublicacionRepository.class
-})
+// Ya no hace falta?
+@SpringBootTest
 class SchoolEventsApplicationTests {
+    @Test
+    void contextLoads() {}
 }

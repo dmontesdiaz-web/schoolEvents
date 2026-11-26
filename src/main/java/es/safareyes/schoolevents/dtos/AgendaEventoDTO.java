@@ -9,5 +9,4 @@ public record AgendaEventoDTO(
         EstadoInscripcion estado,
         Integer posicionEspera,
         EventoResumenDTO evento
-) {
-}
+) {}
