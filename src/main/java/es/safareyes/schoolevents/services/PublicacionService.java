@@ -25,6 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Slf4j
 public class PublicacionService {
+
     private iPublicacionRepository repository;
     private iEventoRepository eventoRepository;
     private iUsuarioRepository usuarioRepository;
@@ -34,9 +35,8 @@ public class PublicacionService {
 
     @Transactional
     public PublicacionDTO publicar(Integer idEvento, PublicacionCreateDTO dto, Integer idUsuario) {
-        Evento evento = eventoRepository.findById(idEvento)
-                .filter(e -> e.getEstado() != EstadoEvento.BORRADOR)
-                .orElseThrow(() -> new ElementoNoEncontrado("No existe el evento con id " + idEvento));
+
+        Evento evento = buscarEventoVisible(idEvento);
 
         Usuario autor = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ElementoNoEncontrado("No existe el usuario con id " + idUsuario));
@@ -73,10 +73,20 @@ public class PublicacionService {
     }
 
     public List<PublicacionDTO> listar(Integer idEvento) {
+        // Esto es para el endpoint 15, get de publicaciones con sus fotos.
+        buscarEventoVisible(idEvento);
+        return publicacionMapper.toDTO(repository.buscarPorEventoConFotos(idEvento));
+    }
+
+    private Evento buscarEventoVisible(Integer idEvento) {
         Evento evento = eventoRepository.findById(idEvento)
-                .filter(e -> e.getEstado() != EstadoEvento.BORRADOR)
                 .orElseThrow(() -> new ElementoNoEncontrado("No existe el evento con id " + idEvento));
 
-        return publicacionMapper.toDTO(repository.findByEventoIdOrderByCreadaEnDesc(idEvento));
+        // Asegurarnos que los borradores no son públicos
+        if (evento.getEstado() == EstadoEvento.BORRADOR) {
+            throw new ElementoNoEncontrado("No existe el evento con id " + idEvento);
+        }
+
+        return evento;
     }
 }
