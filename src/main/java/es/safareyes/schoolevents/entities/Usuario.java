@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "usuario")
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,7 +35,7 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private RolUsuario rol;
 
-    // solo los estudiantes tienen curso
+    // me tengo que asegurar que solo los estudiantes tengan curso
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_curso")
     private Curso curso;

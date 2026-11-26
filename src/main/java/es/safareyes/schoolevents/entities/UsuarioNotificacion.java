@@ -10,10 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuario_notificacion", uniqueConstraints = {
-        @UniqueConstraint(name = "ux_usuario_notificacion", columnNames = {"id_usuario", "id_notificacion"})
-})
-@EntityListeners(AuditingEntityListener.class)
+@Table(name = "usuario_notificacion")
 @Getter
 @Setter
 @AllArgsConstructor

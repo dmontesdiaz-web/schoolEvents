@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -35,15 +36,11 @@ public class CambioEvento {
     @Column(name = "valor_nuevo", nullable = false, length = 150)
     private String valorNuevo;
 
-    @Column(name = "fecha_cambio", nullable = false)
+    @CreatedDate
+    @Column(name = "fecha_cambio", nullable = false, updatable = false)
     private LocalDateTime fechaCambio;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_autor", nullable = false)
     private Usuario autor;
-
-    @PrePersist
-    void alCrear() {
-        fechaCambio = LocalDateTime.now();
-    }
 }

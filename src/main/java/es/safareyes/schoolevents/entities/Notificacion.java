@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -39,11 +40,7 @@ public class Notificacion {
     @Column(name = "recurso_id", nullable = false)
     private Integer recursoId;
 
+    @CreatedDate
     @Column(name = "creada_en", nullable = false)
     private LocalDateTime creadaEn;
-
-    @PrePersist
-    void alCrear() {
-        creadaEn = LocalDateTime.now();
-    }
 }

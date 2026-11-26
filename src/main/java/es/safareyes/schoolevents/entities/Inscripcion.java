@@ -5,14 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "inscripcion", uniqueConstraints = {
-        @UniqueConstraint(name = "ux_inscripcion", columnNames = {"id_usuario", "id_evento"})
-})
+@Table(name = "inscripcion")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -52,20 +52,11 @@ public class Inscripcion {
     @Column(name = "recordatorio_1h_enviado", nullable = false)
     private boolean recordatorio1hEnviado;
 
-    @Column(name = "creado_en", nullable = false)
+    @CreatedDate
+    @Column(name = "creado_en", nullable = false, updatable = false)
     private LocalDateTime creadoEn;
 
+    @LastModifiedDate
     @Column(name = "actualizado_en", nullable = false)
     private LocalDateTime actualizadoEn;
-
-    @PrePersist
-    void alCrear() {
-        creadoEn = LocalDateTime.now();
-        actualizadoEn = creadoEn;
-    }
-
-    @PreUpdate
-    void alActualizar() {
-        actualizadoEn = LocalDateTime.now();
-    }
 }

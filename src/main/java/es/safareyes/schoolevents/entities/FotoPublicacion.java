@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -41,15 +42,11 @@ public class FotoPublicacion {
     @Column(name = "orden", nullable = false)
     private Integer orden;
 
-    @Column(name = "subida_en", nullable = false)
+    @CreatedDate
+    @Column(name = "subida_en", nullable = false, updatable = false)
     private LocalDateTime subidaEn;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_publicacion", nullable = false)
     private Publicacion publicacion;
-
-    @PrePersist
-    void alCrear() {
-        subidaEn = LocalDateTime.now();
-    }
 }
